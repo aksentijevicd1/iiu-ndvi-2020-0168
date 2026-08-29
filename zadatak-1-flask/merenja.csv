@@ -1,0 +1,11 @@
+parcela_id,datum,ndvi,ndwi,klasifikacija,izvor
+1,2026-04-10,0.31,0.12,suva,satelit
+1,2026-04-25,0.44,0.15,zdrava,satelit
+1,2026-05-15,0.52,0.18,zdrava,satelit
+1,2026-05-30,0.38,0.09,suva,satelit
+1,2026-06-14,0.17,0.04,degradirana,satelit
+2,2026-04-10,0.48,0.21,zdrava,satelit
+2,2026-05-15,0.61,0.24,zdrava,satelit
+2,2026-06-14,0.55,0.19,zdrava,satelit
+3,2026-04-25,0.22,0.07,suva,satelit
+3,2026-05-30,0.14,0.03,degradirana,satelit

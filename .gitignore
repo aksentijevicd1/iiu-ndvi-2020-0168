@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Baze se prave skriptom database_setup.py
+*.db
+*.sqlite3
+
+# Radni materijali: nastavni materijali, nacrti, radne verzije dokumenata
+docs/
+
+# Kod sa vezbi — lokalna referenca, nije deo resenja
+vezbe/
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Word privremeni fajlovi
+~$*.doc*
+
+# Arduino build
+build/
+*.hex

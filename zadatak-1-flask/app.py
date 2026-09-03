@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, g, jsonify, request
+from flask import Flask, g, jsonify, request, render_template
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -28,6 +28,10 @@ def klasifikuj(ndvi):
     return 'zdrava'
 
 
+
+@app.route("/")
+def index():
+    return render_template('index.html')
 
 @app.route('/api/parcele', methods=['GET'])
 def get_parcele():

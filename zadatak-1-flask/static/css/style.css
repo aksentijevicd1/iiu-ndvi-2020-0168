@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding-top: 5vh;
+}
+
+.container {
+    background: #ffffff;
+    width: 90%;
+    max-width: 700px;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+select, input, button {
+    font: inherit;
+    padding: 0.6em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#merenje-form {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
+}
+
+#input-ndvi {
+    width: 90px;
+}
+
+#merenje-form button {
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#merenja-lista {
+    list-style: none;
+    padding: 0;
+    margin-top: 2em;
+}
+
+.merenje-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    padding: 1em;
+    background: #ecf0f1;
+    border-radius: 5px;
+    margin-bottom: 0.5em;
+}
+
+.oznaka {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.oznaka.zdrava {
+    background-color: #2ecc71;
+}
+
+.oznaka.suva {
+    background-color: #f1c40f;
+}
+
+.oznaka.degradirana {
+    background-color: #e74c3c;
+}
+
+.naziv, .datum, .ndvi {
+    min-width: 100px;
+}
+
+.naziv {
+    font-weight: 600;
+}
+
+.stanje {
+    flex-grow: 1;
+}
+
+.delete-btn {
+    border: none;
+    background: #e74c3c;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}

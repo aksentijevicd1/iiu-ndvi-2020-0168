@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stanje vegetacije | Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stanje vegetacije</h1>
+
+            <div class="filter-panel">
+                <label for="filter-parcela">Prikaži parcelu</label>
+                <select id="filter-parcela">
+                    <option value="">Sve parcele</option>
+                </select>
+            </div>
+
+            <form id="merenje-form">
+                <select id="input-parcela" required></select>
+                <input type="date" id="input-datum" required>
+                <input type="number" id="input-ndvi" step="0.01" min="-1" max="1" placeholder="NDVI" required>
+                <button type="submit">Dodaj</button>
+            </form>
+        </header>
+        <main>
+            <ul id="merenja-lista">
+            </ul>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

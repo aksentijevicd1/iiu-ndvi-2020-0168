@@ -27,3 +27,8 @@ desktop.ini
 # Arduino build
 build/
 *.hex
+
+# Copernicus pristupni kljucevi
+seminarski/kljucevi.py
+
+.env

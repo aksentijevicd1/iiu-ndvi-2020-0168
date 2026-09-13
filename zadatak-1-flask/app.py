@@ -72,6 +72,52 @@ def add_merenje():
     db.commit()
     return jsonify({'id':cursor.lastrowid, 'parcela_id':parcela_id, 'datum':datum, 'ndvi':ndvi, 'ndwi':ndwi, 'klasifikacija':klasifikacija, 'izvor':izvor}), 201
 
+@app.route('/api/parcele/<int:parcela_id>/satelitsko-merenje', methods=['POST'])
+def add_satelitsko_merenje(parcela_id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM parcele WHERE id = ?", (parcela_id,))
+    parcela = cursor.fetchone()
+    if parcela is None:
+        return jsonify({'error': 'Parcela ne postoji'}), 404
+
+    try:
+        from satelit import obradi_parcelu
+        rezultat = obradi_parcelu(
+            parcela['lat'],
+            parcela['lon'],
+            parcela['povrsina_ha']
+        )
+    except Exception as error:
+        app.logger.exception('Greska pri preuzimanju satelitskog merenja')
+        return jsonify({'error': str(error)}), 502
+
+    cursor.execute(
+        "SELECT * FROM merenja WHERE parcela_id = ? AND datum = ? AND izvor = 'satelit'",
+        (parcela_id, rezultat['datum'])
+    )
+    postojece = cursor.fetchone()
+    if postojece is not None:
+        odgovor = dict(postojece)
+        odgovor['poruka'] = 'Merenje za ovaj satelitski snimak vec postoji.'
+        return jsonify(odgovor), 200
+
+    klasifikacija = klasifikuj(rezultat['ndvi'])
+    cursor.execute(
+        "INSERT INTO merenja (parcela_id, datum, ndvi, ndwi, klasifikacija, izvor) VALUES (?,?,?,?,?,?)",
+        (parcela_id, rezultat['datum'], rezultat['ndvi'], rezultat['ndwi'], klasifikacija, 'satelit')
+    )
+    db.commit()
+    return jsonify({
+        'id': cursor.lastrowid,
+        'parcela_id': parcela_id,
+        'datum': rezultat['datum'],
+        'ndvi': rezultat['ndvi'],
+        'ndwi': rezultat['ndwi'],
+        'klasifikacija': klasifikacija,
+        'izvor': 'satelit'
+    }), 201
+
 @app.route('/api/merenja/<int:merenje_id>', methods=['PUT'])
 def update_merenje(merenje_id):
     izmena = request.json

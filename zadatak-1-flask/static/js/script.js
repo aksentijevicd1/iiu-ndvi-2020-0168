@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputNdvi = document.getElementById('input-ndvi');
     const merenjeForm = document.getElementById('merenje-form');
     const merenjaLista = document.getElementById('merenja-lista');
+    const satelitBtn = document.getElementById('satelit-btn');
+    const satelitStatus = document.getElementById('satelit-status');
 
     let parcele = {};
 
@@ -67,6 +69,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     filterParcela.addEventListener('change', fetchMerenja);
+
+    satelitBtn.addEventListener('click', async () => {
+        const parcelaId = filterParcela.value;
+        if (!parcelaId) {
+            satelitStatus.textContent = 'Prvo izaberi parcelu.';
+            return;
+        }
+
+        satelitBtn.disabled = true;
+        satelitStatus.textContent = 'Preuzimanje je u toku...';
+
+        try {
+            const response = await fetch(`/api/parcele/${parcelaId}/satelitsko-merenje`, {
+                method: 'POST'
+            });
+            const rezultat = await response.json();
+            if (!response.ok) throw new Error(rezultat.error || 'Preuzimanje nije uspelo');
+
+            satelitStatus.textContent = rezultat.poruka ||
+                `Dodato merenje: NDVI ${rezultat.ndvi} (${rezultat.klasifikacija}).`;
+            await fetchMerenja();
+        } catch (error) {
+            satelitStatus.textContent = `Greška: ${error.message}`;
+        } finally {
+            satelitBtn.disabled = false;
+        }
+    });
 
     merenjeForm.addEventListener('submit', async (e) => {
         e.preventDefault();

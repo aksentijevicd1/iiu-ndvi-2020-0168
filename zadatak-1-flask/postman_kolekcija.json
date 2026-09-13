@@ -1,0 +1,572 @@
+{
+  "info": {
+    "name": "NDVI - pracenje stanja vegetacije",
+    "description": "REST API domaceg zadatka 1 iz predmeta Internet inteligentnih uredjaja.\n\nAplikacija vodi evidenciju poljoprivrednih parcela i satelitskih merenja vegetacijskih indeksa NDVI i NDWI. Klasifikaciju stanja vegetacije (zdrava, suva, degradirana) racuna server iz vrednosti NDVI, ne salje je korisnik.\n\nPre pokretanja: popuniti .env, instalirati requirements.txt i pokrenuti aplikaciju sa python app.py u folderu zadatak-1-flask.\n\nPromenljive: base_url je adresa aplikacije, merenje_id je identifikator merenja nad kojim rade zahtevi 4 i 5, a parcela_id odredjuje parcelu za automatsko satelitsko merenje u zahtevu 6.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5000",
+      "type": "string"
+    },
+    {
+      "key": "merenje_id",
+      "value": "11",
+      "type": "string"
+    },
+    {
+      "key": "parcela_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Prikaz svih parcela",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/parcele",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "parcele"
+          ]
+        },
+        "description": "Vraca listu svih parcela koje se prate, sa nazivom, lokacijom, koordinatama i povrsinom u hektarima."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parcele",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parcele"
+              ]
+            },
+            "description": "Vraca listu svih parcela koje se prate, sa nazivom, lokacijom, koordinatama i povrsinom u hektarima."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n    {\n        \"id\": 1,\n        \"lat\": 44.8536,\n        \"lokacija\": \"Zemun Polje\",\n        \"lon\": 20.3086,\n        \"naziv\": \"Parcela 1\",\n        \"povrsina_ha\": 4.2\n    },\n    {\n        \"id\": 2,\n        \"lat\": 44.7989,\n        \"lokacija\": \"Surcin\",\n        \"lon\": 20.2761,\n        \"naziv\": \"Parcela 2\",\n        \"povrsina_ha\": 6.8\n    },\n    {\n        \"id\": 3,\n        \"lat\": 44.8712,\n        \"lokacija\": \"Pancevacki rit\",\n        \"lon\": 20.4634,\n        \"naziv\": \"Parcela 3\",\n        \"povrsina_ha\": 3.5\n    }\n]"
+        }
+      ]
+    },
+    {
+      "name": "2. Prikaz merenja za parcelu",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/merenja?parcela_id=3",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "merenja"
+          ],
+          "query": [
+            {
+              "key": "parcela_id",
+              "value": "3"
+            }
+          ]
+        },
+        "description": "Vraca merenja izabrane parcele, sortirana po datumu. Bez parametra parcela_id vraca sva merenja."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/merenja?parcela_id=3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja"
+              ],
+              "query": [
+                {
+                  "key": "parcela_id",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "Vraca merenja izabrane parcele, sortirana po datumu. Bez parametra parcela_id vraca sva merenja."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n    {\n        \"datum\": \"2026-04-25\",\n        \"id\": 9,\n        \"izvor\": \"satelit\",\n        \"klasifikacija\": \"suva\",\n        \"ndvi\": 0.22,\n        \"ndwi\": 0.07,\n        \"parcela_id\": 3\n    },\n    {\n        \"datum\": \"2026-05-30\",\n        \"id\": 10,\n        \"izvor\": \"satelit\",\n        \"klasifikacija\": \"degradirana\",\n        \"ndvi\": 0.14,\n        \"ndwi\": 0.03,\n        \"parcela_id\": 3\n    }\n]"
+        }
+      ]
+    },
+    {
+      "name": "3. Dodavanje merenja",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/merenja",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "merenja"
+          ]
+        },
+        "description": "Dodaje novo merenje. Polje klasifikacija se ne salje - server ga odredjuje iz vrednosti ndvi.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"parcela_id\": 2,\n    \"datum\": \"2026-07-01\",\n    \"ndvi\": 0.66,\n    \"ndwi\": 0.23\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/merenja",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja"
+              ]
+            },
+            "description": "Dodaje novo merenje. Polje klasifikacija se ne salje - server ga odredjuje iz vrednosti ndvi.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"parcela_id\": 2,\n    \"datum\": \"2026-07-01\",\n    \"ndvi\": 0.66,\n    \"ndwi\": 0.23\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"datum\": \"2026-07-01\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"zdrava\",\n    \"ndvi\": 0.66,\n    \"ndwi\": 0.23,\n    \"parcela_id\": 2\n}"
+        },
+        {
+          "name": "400 Bad Request",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/merenja",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"datum\": \"2026-07-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"error\": \"Polja parcela_id, datum i ndvi su obavezna\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "4. Izmena merenja",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/merenja/{{merenje_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "merenja",
+            "{{merenje_id}}"
+          ]
+        },
+        "description": "Menja vrednost ndvi za postojece merenje. Klasifikacija se preracunava.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"ndvi\": 0.18\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/merenja/{{merenje_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja",
+                "{{merenje_id}}"
+              ]
+            },
+            "description": "Menja vrednost ndvi za postojece merenje. Klasifikacija se preracunava.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ndvi\": 0.18\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 11,\n    \"klasifikacija\": \"degradirana\",\n    \"ndvi\": 0.18\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/merenja/9999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja",
+                "9999"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ndvi\": 0.18\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"error\": \"Merenje ne postoji\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "5. Brisanje merenja",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/merenja/{{merenje_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "merenja",
+            "{{merenje_id}}"
+          ]
+        },
+        "description": "Brise merenje po identifikatoru."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/merenja/{{merenje_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja",
+                "{{merenje_id}}"
+              ]
+            },
+            "description": "Brise merenje po identifikatoru."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Merenje sa id-em 11 je uspesno obrisano\"\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/merenja/9999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "merenja",
+                "9999"
+              ]
+            },
+            "description": ""
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"error\": \"Merenje ne postoji\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "6. Preuzimanje satelitskog merenja",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/parcele/{{parcela_id}}/satelitsko-merenje",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "parcele",
+            "{{parcela_id}}",
+            "satelitsko-merenje"
+          ]
+        },
+        "description": "Cita koordinate i povrsinu parcele iz baze, preuzima najnoviji odgovarajuci Sentinel-2 snimak, racuna NDVI i NDWI i upisuje merenje. Zahtev nema telo. Copernicus kljucevi se citaju iz .env fajla Flask aplikacije."
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parcele/{{parcela_id}}/satelitsko-merenje",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parcele",
+                "{{parcela_id}}",
+                "satelitsko-merenje"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1\n}"
+        },
+        {
+          "name": "200 OK - merenje vec postoji",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parcele/{{parcela_id}}/satelitsko-merenje",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parcele",
+                "{{parcela_id}}",
+                "satelitsko-merenje"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1,\n    \"poruka\": \"Merenje za ovaj satelitski snimak vec postoji.\"\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parcele/9999/satelitsko-merenje",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parcele",
+                "9999",
+                "satelitsko-merenje"
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"error\": \"Parcela ne postoji\"\n}"
+        }
+      ]
+    }
+  ]
+}

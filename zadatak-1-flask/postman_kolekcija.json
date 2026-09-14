@@ -473,7 +473,7 @@
             "satelitsko-merenje"
           ]
         },
-        "description": "Cita koordinate i povrsinu parcele iz baze, preuzima najnoviji odgovarajuci Sentinel-2 snimak, racuna NDVI i NDWI i upisuje merenje. Zahtev nema telo. Copernicus kljucevi se citaju iz .env fajla Flask aplikacije."
+        "description": "Cita koordinate i povrsinu parcele iz baze, preuzima najnoviji odgovarajuci Sentinel-2 snimak, racuna NDVI i NDWI, pravi mapu i upisuje merenje. Zahtev nema telo. Copernicus kljucevi se citaju iz .env fajla Flask aplikacije."
       },
       "response": [
         {
@@ -504,7 +504,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1\n}"
+          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"mapa_url\": \"/static/mape/parcela-1.png\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1,\n    \"udeo_povrsine\": {\n        \"degradirana\": 0.0,\n        \"suva\": 100.0,\n        \"voda\": 0.0,\n        \"zdrava\": 0.0\n    }\n}"
         },
         {
           "name": "200 OK - merenje vec postoji",
@@ -534,7 +534,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1,\n    \"poruka\": \"Merenje za ovaj satelitski snimak vec postoji.\"\n}"
+          "body": "{\n    \"datum\": \"2026-09-07\",\n    \"id\": 11,\n    \"izvor\": \"satelit\",\n    \"klasifikacija\": \"suva\",\n    \"mapa_url\": \"/static/mape/parcela-1.png\",\n    \"ndvi\": 0.294,\n    \"ndwi\": -0.513,\n    \"parcela_id\": 1,\n    \"poruka\": \"Merenje za ovaj satelitski snimak vec postoji.\",\n    \"udeo_povrsine\": {\n        \"degradirana\": 0.0,\n        \"suva\": 100.0,\n        \"voda\": 0.0,\n        \"zdrava\": 0.0\n    }\n}"
         },
         {
           "name": "404 Not Found",

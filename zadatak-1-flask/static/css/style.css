@@ -50,6 +50,20 @@ h1 {
     font-size: 0.9em;
 }
 
+#satelit-rezultat {
+    margin-top: 1em;
+}
+
+#satelit-detalji {
+    text-align: center;
+}
+
+#satelit-mapa {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 select, input, button {
     font: inherit;
     padding: 0.6em;

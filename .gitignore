@@ -32,3 +32,4 @@ build/
 seminarski/kljucevi.py
 
 .env
+zadatak-1-flask/static/mape/*.png

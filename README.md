@@ -11,7 +11,7 @@ Sistem za praćenje stanja vegetacije na poljoprivrednim parcelama, sa dva izvor
 podataka:
 
 1. **Satelitski sloj** — Flask aplikacija na zahtev preuzima Sentinel-2 snimak sa
-   Copernicus servisa, računa NDVI i NDWI i upisuje merenje u bazu.
+   Copernicus servisa, računa NDVI i NDWI, pravi mapu i upisuje merenje u bazu.
 2. **Terenski sloj** — Arduino stanica sa senzorom vlage zemljišta i temperature,
    koja istu klasifikaciju određuje na licu mesta i prikazuje je RGB diodom.
 
@@ -64,7 +64,8 @@ CLIENT_SECRET=tvoj-client-secret
 
 Aplikacija se otvara na `http://127.0.0.1:5000`. Izborom parcele i klikom na
 **Preuzmi sa satelita** preuzima se najnoviji odgovarajući Sentinel-2 snimak,
-računaju se NDVI i NDWI i rezultat se upisuje u postojeću listu merenja.
+računaju se NDVI i NDWI, prikazuju mapa i udeli klasa, a rezultat se upisuje u
+postojeću listu merenja.
 
 Zadatak 4 — servis terenske stanice (bez Arduina vraća probno očitavanje):
 

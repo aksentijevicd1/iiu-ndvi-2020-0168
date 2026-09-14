@@ -1,5 +1,6 @@
 import sqlite3
-from flask import Flask, g, jsonify, request, render_template
+from pathlib import Path
+from flask import Flask, g, jsonify, request, render_template, url_for
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -83,10 +84,14 @@ def add_satelitsko_merenje(parcela_id):
 
     try:
         from satelit import obradi_parcelu
+        mapa_relativna = f'mape/parcela-{parcela_id}.png'
+        mapa_putanja = Path(app.root_path) / 'static' / mapa_relativna
+        mapa_putanja.parent.mkdir(parents=True, exist_ok=True)
         rezultat = obradi_parcelu(
             parcela['lat'],
             parcela['lon'],
-            parcela['povrsina_ha']
+            parcela['povrsina_ha'],
+            mapa_putanja
         )
     except Exception as error:
         app.logger.exception('Greska pri preuzimanju satelitskog merenja')
@@ -100,6 +105,8 @@ def add_satelitsko_merenje(parcela_id):
     if postojece is not None:
         odgovor = dict(postojece)
         odgovor['poruka'] = 'Merenje za ovaj satelitski snimak vec postoji.'
+        odgovor['udeo_povrsine'] = rezultat['udeo_povrsine']
+        odgovor['mapa_url'] = url_for('static', filename=mapa_relativna)
         return jsonify(odgovor), 200
 
     klasifikacija = klasifikuj(rezultat['ndvi'])
@@ -115,7 +122,9 @@ def add_satelitsko_merenje(parcela_id):
         'ndvi': rezultat['ndvi'],
         'ndwi': rezultat['ndwi'],
         'klasifikacija': klasifikacija,
-        'izvor': 'satelit'
+        'izvor': 'satelit',
+        'udeo_povrsine': rezultat['udeo_povrsine'],
+        'mapa_url': url_for('static', filename=mapa_relativna)
     }), 201
 
 @app.route('/api/merenja/<int:merenje_id>', methods=['PUT'])

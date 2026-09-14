@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const merenjaLista = document.getElementById('merenja-lista');
     const satelitBtn = document.getElementById('satelit-btn');
     const satelitStatus = document.getElementById('satelit-status');
+    const satelitRezultat = document.getElementById('satelit-rezultat');
+    const satelitDetalji = document.getElementById('satelit-detalji');
+    const satelitMapa = document.getElementById('satelit-mapa');
 
     let parcele = {};
 
@@ -68,7 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    filterParcela.addEventListener('change', fetchMerenja);
+    filterParcela.addEventListener('change', () => {
+        satelitStatus.textContent = '';
+        satelitRezultat.hidden = true;
+        fetchMerenja();
+    });
 
     satelitBtn.addEventListener('click', async () => {
         const parcelaId = filterParcela.value;
@@ -79,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         satelitBtn.disabled = true;
         satelitStatus.textContent = 'Preuzimanje je u toku...';
+        satelitRezultat.hidden = true;
 
         try {
             const response = await fetch(`/api/parcele/${parcelaId}/satelitsko-merenje`, {
@@ -87,8 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const rezultat = await response.json();
             if (!response.ok) throw new Error(rezultat.error || 'Preuzimanje nije uspelo');
 
-            satelitStatus.textContent = rezultat.poruka ||
-                `Dodato merenje: NDVI ${rezultat.ndvi} (${rezultat.klasifikacija}).`;
+            satelitStatus.textContent = rezultat.poruka || 'Novo satelitsko merenje je dodato.';
+            const udeo = rezultat.udeo_povrsine;
+            const tumacenjeNdwi = rezultat.ndwi > 0 ? 'prisutna voda' : 'bez izražene vode';
+            satelitDetalji.textContent =
+                `NDVI ${rezultat.ndvi} (${rezultat.klasifikacija}), ` +
+                `NDWI ${rezultat.ndwi} (${tumacenjeNdwi}). U parceli: ` +
+                `degradirana ${udeo.degradirana}%, suva ${udeo.suva}%, ` +
+                `zdrava ${udeo.zdrava}%, voda ${udeo.voda}%.`;
+            satelitMapa.src = `${rezultat.mapa_url}?v=${Date.now()}`;
+            satelitRezultat.hidden = false;
             await fetchMerenja();
         } catch (error) {
             satelitStatus.textContent = `Greška: ${error.message}`;
